@@ -42,17 +42,30 @@ async def on_message(message):
 		hbd=hbds[random.randint(0,len(hbds))]
 		msg+=" "+hbd.media_url
 		await client.send_message(message.channel, msg)
+	
 	#tag spam a user(not recommended)	
 	if message.content.startswith("!tagspam"):
 		msg=""
 		if len(message.mentions)>0:
 			for i in message.mentions:
-				msg+=i.mention+"\t"
+				if i.mention=="<@199515135142920192>": #hardcoded to not work against me xd
+					await client.send_message(message.channel,"Nope")
+					return
+				msg+=i.mention+"\t"			
 		else:
 			msg="Mention someone."
 			await client.send_message(message.channel, msg)
 			return
-		for x in range(5):
+		if len(message.content.split(" "))>2:
+			try:
+				r=int(message.content.split(" ")[2])
+				if r>50:
+					r=50
+			except:
+				r=5
+		else:
+			r=5
+		for x in range(r):
 			await client.send_message(message.channel, msg)
 	
 	#synonym using vocabulary api
@@ -107,6 +120,20 @@ async def on_message(message):
 			for i in result:
 				msg+=i["text"]+"\n"
 		await client.send_message(message.channel,msg)
+		
+	#despacito
+	if message.content.startswith("!despacito"):
+		with open("despacito.txt") as file: 
+			content=file.readlines()
+		j=0;
+		while j<len(content):
+			msg=""
+			i=0
+			while i<10 and j<len(content): #10 lines at a time to prevent getting rate limited by discord
+				msg+=content[j]
+				i+=1
+				j+=1
+			await client.send_message(message.channel, msg)
 	
 	
 
